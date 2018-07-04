@@ -1,0 +1,6 @@
+SELECT hc_year 학년도, hc_hakgi 학기, DEPTNAME(HJ_HGCODE) 학과, HJ_HAKBUN 학번, HJ_KNAME 성명,
+STATENAME(hc_scode) 제적사유, USR_TODATE(HC_SIYMD) 제적일자
+FROM AC12011, AC1202
+WHERE HJ_HAKBUN = HC_HAKBUN
+AND SUBSTR(HC_SCODE,1,1) = '2' AND HC_SIYMD >= :시작일자 AND hc_siymd <= :종료일자
+ORDER BY HC_SIYMD

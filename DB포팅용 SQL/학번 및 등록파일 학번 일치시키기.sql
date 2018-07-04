@@ -1,0 +1,27 @@
+UPDATE TM학적 SET 학번 =  F_GETHAKBUN(주민등록번호,:학년도)
+WHERE 입학일자 >= :학년도 || '0225'  AND 학적상태 = '00';
+UPDATE TDFEEGOJI SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TDFEERECEIVE SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TDJANGHAK SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TDJANGHAKSUM SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TDPAYGOJI SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TDPAYRECEIVE SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE SCHOOLYEAR = :학년도
+AND HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TMVIRTUALNO SET HAKBUN = (SELECT 학번 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = HAKBUN)
+WHERE HAKBUN IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+UPDATE TM가상계좌 B SET 학번 = (SELECT 학번 FROM TM학적 A WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 수험번호 = B.학번)
+WHERE 학번 IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%' AND 학적상태 = '00');
+--SELECT 학번 FROM TM가상계좌
+--WHERE 학번 IN (SELECT 수험번호 FROM TM학적 WHERE 학번 LIKE 'A' || SUBSTR(:학년도,3,2) || '%'));
+

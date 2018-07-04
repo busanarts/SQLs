@@ -1,0 +1,31 @@
+SELECT 학자금코드 학자금융자학과코드, '11' 학적코드, 주민등록번호, 학번 수험번호, 성 || 이름 성명,
+'1' 학년, DECODE(state, '77', '2', '11', '1', '0') 등록납부대상구분,
+:입시년도 || :등록마감일 수납원장마감일자,
+'1' 대학수납계좌구분1, '032' 수납계좌은행코드1, F_GETVNO(학번, '301002') 수납은행계좌번호1, 성 || 이름 수납계좌예금주명1,
+'1' 대학수납계좌구분2, '011' 수납계좌은행코드2, F_GETVNO(학번, '301003') 수납은행계좌번호2, 성 || 이름 수납계좌예금주명2,
+DECODE(J.JANGHAKCD1, '30', F_GETDCODE(J.JANGHAKCD1), '') 재단수혜장학1코드,
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD1), '30', NVL(J.SCHOLARSHIP1, 0), 0) 재단수혜장학1금액,
+DECODE(J.JANGHAKCD2, '30', F_GETDCODE(J.JANGHAKCD2), '') 재단수혜장학2코드,
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD2), '30', NVL(J.SCHOLARSHIP2, 0), 0) 재단수혜장학2금액,
+DECODE(J.JANGHAKCD3, '30', F_GETDCODE(J.JANGHAKCD3), '') 재단수혜장학3코드,
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD3), '30', NVL(J.SCHOLARSHIP3, 0), 0) 재단수혜장학3금액,
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD1), '10', NVL(J.SCHOLARSHIP1, 0), 0) +
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD2), '10', NVL(J.SCHOLARSHIP2, 0), 0) +
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD3), '10', NVL(J.SCHOLARSHIP3, 0), 0) 교내장학금,
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD1), '20', NVL(J.SCHOLARSHIP1, 0), 0) +
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD2), '20', NVL(J.SCHOLARSHIP2, 0), 0) +
+DECODE(F_GETJANGHAKGBN(J.JANGHAKCD3), '20', NVL(J.SCHOLARSHIP3, 0), 0) 교외장학금,
+0 예치금, -- 무조건 0 처리
+admissionfee 입학금, tuition - prefee 수업료, 0 기성회비
+FROM TDFEEGOJI D, TDJANGHAKSUM J, TM학적 S, TM학과 H --, TMSCHOLARSHIP C
+WHERE D.schoolyear = :입시년도
+--AND D.studentgbn = '30303120'
+AND D.SCHOOLYEAR = J.SCHOOLYEAR(+)
+AND D.SEMESTER = J.SEMESTER(+)
+AND D.HAKBUN = J.HAKBUN(+)
+AND d.SCHOOLYEAR = SUBSTR(s.입학일자,1,4)
+AND D.HAKBUN = 학번 AND D.class = H.학과코드
+--AND studentgbn = '3030' || DECODE(:차수, '01', '3110', '02', '3120', '03', '3130')
+-- 3030300 = 정시1차, 30303112 = 정시1차 추가합격2, 30303120 = 정시2차
+AND STUDENTGBN <> '30304000'
+--AND substr(studentgbn,5,4) = '3112

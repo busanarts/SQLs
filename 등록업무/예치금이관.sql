@@ -1,0 +1,17 @@
+INSERT INTO  TDFEEGOJI_예치금
+SELECT * FROM TDFEEGOJI
+WHERE studentgbn = '30304000'
+AND schoolyear = :학년도;
+
+INSERT INTO  TDFEERECEIVE_예치금
+SELECT * FROM TDFEERECEIVE
+WHERE studentgbn = '30304000'
+AND schoolyear = :학년도;
+
+DELETE FROM TDFEEGOJI
+WHERE studentgbn = '30304000'
+AND schoolyear = :학년도;
+
+DELETE FROM TDFEERECEIVE
+WHERE studentgbn = '30304000'
+AND schoolyear = :학년도

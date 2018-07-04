@@ -1,0 +1,30 @@
+SELECT decode(substr(iw_chasu, 1, 1), '9', '수시', '정시') || substr(iw_chasu, 2, 1) || '차' 차수,
+       iw_shno 수험번호,
+       iw_kname 성명,
+       iw_jcode1 || '-' || iw_jcode2 주민번호,
+       iw_ggcode 고교코드,
+       iw_ggname 출신학교명,
+       iw_ggjyear 졸업년도,
+       hg_name 지원학과,
+       jg_name 전형구분,
+       jg_fname 전형구분상세,
+       decode(iw_result, '1', '합격', '2', '예비합격', '3', '불합격', '4', '합격포기', '5', '충원합격') 합격여부,
+       decode(iw_dungrok, '1', '등록', '4', '환불') 등록여부,
+       decode(iw_mjcheck, '1', '적합', '0', '부적합', '3', '결시') 면접체크,
+       iw_bigo 비고,
+       iw_rank1 전형별순위,
+       decode(sign(iw_rank2), 1, iw_rank2) 예비합격순위,
+       to_char(sj_nshjum, '9990.99') 내신환산점수,
+       to_char(sj_sghjum, '9990.99') 실기환산점수,
+       to_char(sj_totjum, '9990.99') 입시총점
+  FROM ipsi.ipsi201,
+       ipsi.ipsi108,
+       ipsi.ipsi104,
+       ipsi.ipsi202
+ WHERE iw_year =
+       :학년도 AND IW_JWHGCODE1 = HG_CODE and iw_year = hg_year AND iw_jhgubun = jg_code AND iw_year = sj_year(+) AND iw_chasu = sj_chasu(+) AND iw_jsno = sj_jsno(+)
+ORDER BY decode(substr(iw_chasu, 1, 1), '9', '수시', '정시'),
+       substr(iw_chasu, 2, 1),
+       iw_jwhgcode1,
+       substr(iw_jhgubun, 1, 1),
+       sj_totjum desc

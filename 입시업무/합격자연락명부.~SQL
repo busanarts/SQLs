@@ -1,0 +1,8 @@
+Select hg_name 지원학과, iw_shno 수험번호, iw_kname 성명,
+iw_hdtel 핸드폰, iw_telno1 || '-' || iw_telno2 || '-' || iw_telno3 전화번호,
+iw_ucode1 || '-' || iw_ucode2 우편번호, iw_addr1 || ' ' || iw_addr2 주소
+From  IPSI201, ipsi104
+Where iw_year      = '2007' and iw_chasu = '03'
+and iw_result = '1'
+and iw_jwhgcode1 = hg_code
+order by iw_chasu, hg_name, iw_kname
