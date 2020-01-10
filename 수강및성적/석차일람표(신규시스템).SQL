@@ -37,7 +37,7 @@ SELECT *
                             학번,
                             성,이름,
                             주민등록번호
-                     HAVING SUM(DECODE(GRADELVL, 'F', 0, GRADEJUM)) >= 15
+                     HAVING SUM(DECODE(GRADELVL, 'F', 0, GRADEJUM)) >= 10
                      ) AA
               ) K
            UNION
@@ -78,7 +78,7 @@ SELECT *
                             학번 ,
                             성||이름 ,
                             주민등록번호
-                     HAVING SUM(DECODE(GRADELVL, 'F', 0, GRADEJUM)) < 15
+                     HAVING SUM(DECODE(GRADELVL, 'F', 0, GRADEJUM)) < 10
                      ) AA
               ) K
        )
