@@ -1,18 +1,19 @@
--- 2번이상 재수강시 문제발생 소지 있음
-
-SELECT 학번, 성명, 과목명,
-max(DECODE(recourseyn, 'N', 학년도 || '-' || 학기  )) 전학기수강기록,
-max(DECODE(recourseyn, 'Y', 학년도 || '-' || 학기  )) 현학기수강신청
-FROM (
-SELECT 학번, 성 || 이름 성명, b.schoolyear 학년도, b.semester 학기, b.gmcode 과목코드, c.GMKNAME 과목명, recourseyn
-FROM ciss.TM학적 a, psutis.TDCOURSE b, psutis.TMGWAMOK c
-WHERE (hakbun, c.gmkname) IN (
-SELECT hakbun, gmkname FROM psutis.TDCOURSE a, psutis.TMGWAMOK b
+SELECT 중복수강.학번, MAX(DECODE(재수강여부, 'N', 과목코드)) 과목코드, MAX(DECODE(재수강여부, 'N', 과목명)) 과목명,
+MAX(DECODE(재수강여부, 'N', 학년도 || '-' || 학기)) 전년도, MAX(DECODE(재수강여부, 'N', 등급)) 등급, MAX(DECODE(재수강여부, 'N', 성적인정여부)) 성적인정여부,
+MAX(DECODE(재수강여부, 'Y', 학년도 || '-' || 학기)) 금년도, MAX(DECODE(재수강여부, 'Y', 등급)) 등급, MAX(DECODE(재수강여부, 'Y', 성적인정여부)) 성적인정여부
+FROM
+(SELECT 성적.hakbun 학번, 성적.schoolyear 학년도, 성적.semester 학기, 성적.gmcode 과목코드, GMKNAME 과목명, gradelvl 등급, recourseyn 재수강여부, injung 성적인정여부
+FROM psutis.TDresult 성적, psutis.TMGWAMOK 과목, psutis.tdcourse 수강
+WHERE (성적.hakbun, 성적.gmcode) IN (
+SELECT hakbun, gmcode FROM psutis.TDCOURSE a
 WHERE a.schoolyear = :학년도
 AND a.semester = :학기
 AND recourseyn = 'Y'
-AND a.gmcode = b.GMCODE)
-AND 학번 = hakbun
-AND b.GMCODE= c.GMCODE
-ORDER BY 학번, b.gmcode, b.schoolyear, b.semester
-) GROUP BY 학번, 성명, 과목명
+)
+AND 성적.hakbun = 수강.hakbun
+AND 성적.schoolyear = 수강.schoolyear
+AND 성적.semester = 수강.semester
+AND 성적.gmcode = 수강.gmcode
+AND 성적.gmcode = 과목.gmcode
+ORDER BY 성적.hakbun, 성적.gmcode, 성적.schoolyear, 성적.SEMESTER) 중복수강
+GROUP BY 중복수강.학번
